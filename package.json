@@ -1,0 +1,16 @@
+{
+  "name": "proteun",
+  "version": "1.0.0",
+  "description": "electrical circuite analyzer ",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohammad Khallaghi",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "electron": "^5.0.2"
+  }
+}
