@@ -34,7 +34,8 @@
                         <p>The Play Ground</p>
                     </div>
                     <div class="row">
-                        <canvas id="c" width="310" height="310"></canvas>
+                    
+                        <canvas id="c" width="400" height="400"></canvas>
                     </div>
                 
                 </div>
@@ -48,8 +49,8 @@
             // var offset = 33.33;
             // create grid
 
-            for (var i = 0; i <= (canvas.width / grid); i++) {
-                for (var j = 0; j <= (canvas.height / grid); j++) {
+            for (var i = 1; i < (canvas.width / grid); i++) {
+                for (var j = 1; j < (canvas.height / grid); j++) {
                     console.log(i*grid, j*grid);
                     canvas.add(new fabric.Circle({
                         left: i*grid, 
@@ -66,29 +67,194 @@
 
             // add objects
 
-            canvas.add(new fabric.Rect({ 
-            left: 10, 
-            top: 10, 
-            width: 20, 
-            height: 100, 
-            fill: '#faa', 
-            originX: 'left', 
-            originY: 'top',
-            hasRotatingPoint: false,
-            hasControls: false
-            }));
-            canvas.add(new fabric.Rect({ 
-            left: 10, 
-            top: 10, 
-            width: 100, 
-            height: 20, 
-            fill: '#faa', 
-            originX: 'left', 
-            originY: 'top',
-            hasRotatingPoint: false,
-            hasControls: false
-            }));
 
+            // var imgElement = document.getElementById('resistor');
+
+            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 100, 
+                    top: 100 - 50,
+                    scaleY: scale, 
+                    scaleX: scale
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 300 + 50, 
+                    top: 100,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 90
+                });
+                
+                canvas.add(img1); 
+            });
+
+
+            fabric.Image.fromURL('../statics/images/voltageSource.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 300 + 50, 
+                    top: 200,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 90
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/currentSource.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 200, 
+                    top: 100 - 50,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 0
+                });
+                
+                canvas.add(img1); 
+            });
+            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 200, 
+                    top: 300 - 50,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 0
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/voltageSource.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 100, 
+                    top: 300 -  50,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 0
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/currentSource.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 100 + 50, 
+                    top: 100,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 90
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 100 + 50, 
+                    top: 200,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 90
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 200 + 50, 
+                    top: 200,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 90
+                });
+                
+                canvas.add(img1); 
+            });
+
+            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                //i create an extra var for to change some image properties
+                let scale = 100 / myImg.height;
+
+                var img1 = myImg.set({ 
+                    left: 200 + 50, 
+                    top: 100,
+                    scaleY: scale, 
+                    scaleX: scale,
+                    angle: 90
+                });
+                
+                canvas.add(img1); 
+            });
+
+            // var imgInstance = new fabric.Image(imgElement, {
+            //     width: 100,
+            //     height: 100,
+            //     left: 100,
+            //     top: 100,
+            //     angle: 0,
+            //     opacity: 1,
+            // });
+            // canvas.add(imgInstance);
+
+            // canvas.add(new fabric.Rect({ 
+            // left: 10, 
+            // top: 10, 
+            // width: 20, 
+            // height: 100, 
+            // fill: '#faa', 
+            // originX: 'left', 
+            // originY: 'top',
+            // hasRotatingPoint: false,
+            // hasControls: false
+            // }));
+            // canvas.add(new fabric.Rect({ 
+            // left: 10, 
+            // top: 10, 
+            // width: 100, 
+            // height: 20, 
+            // fill: '#faa', 
+            // originX: 'left', 
+            // originY: 'top',
+            // hasRotatingPoint: false,
+            // hasControls: false
+            // }));
+
+            // var path = new fabric.Path("M 0,16 0,16 L 8,16 L 12,12 L 16,16 L 20,20 L 24,16 L 28,12 L 32,16 L 36,20 L 40,16 L 44,12 L 48,16 L 52,20 L 56,16 L 64,16");
+            // path.set({ left: 120, top: 120, hasControls: true, width: 100, height: 100});
+            // canvas.add(path);
             // canvas.add(new fabric.Circle({ 
             // left: 30, 
             // top: 30, 
