@@ -4,3 +4,22 @@ canvas {
    margin-top: 20%;
    padding: 5%;
 }
+
+
+.element-btn{
+    /* background:url(../statics/images/resistor.png) no-repeat;  */
+    cursor:pointer;
+    border:none;
+    width:40px;
+    height:40px;
+
+  }
+
+  .element-btn:active {
+    /* background:url(../statics/images/resistor.png) no-repeat; */
+    /* background-color: rgb(155, 155, 155); */
+  }
+
+  .description {
+      font-size: 0.9em;
+  }
