@@ -15,11 +15,13 @@ canvas {
 
   }
 
-  .element-btn:active {
-    /* background:url(../statics/images/resistor.png) no-repeat; */
-    /* background-color: rgb(155, 155, 155); */
-  }
+
 
   .description {
       font-size: 0.9em;
+  }
+
+  .modal-helper-image {
+    width: 100px;
+    height: auto;
   }

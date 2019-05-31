@@ -31,41 +31,41 @@
                             </nav>
                         
                         <div >
-                            <a href="">
-                                    <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            
+                                    <button type="button" class="btn btn-light"   title="Tooltip on top" data-toggle="modal" data-target="#resistorModal">
                                             <img src="../statics/images/resistor.png" class="element-btn">
                                     </button>
                             
                                 <p class="description">Resistor</p>
-                            </a>
-                            <a href="">
-                                    <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            
+                            
+                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#currentSourceModal">
                                             <img src="../statics/images/currentSource.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Current Source</p>
-                            </a>
-                            <a href="">
-                                    <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            
+                           
+                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#voltageSourceModal">
                                             <img src="../statics/images/voltageSource.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Voltage Source</p>
-                            </a>
-                            <a href="">
-                                    <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            
+                           
+                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#currentSourceControlledModal">
                                             <img src="../statics/images/currentSourceControlled.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Current Source Controlled</p>
-                            </a>
-                            <a href="">
-                                    <button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+                            
+                            
+                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#voltageSourceControlledModal">
                                             <img src="../statics/images/voltageSourceControlled.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Voltage Source Controlled</p>
-                            </a>
+                          
                             
                         </div>
                     </div>
@@ -85,6 +85,277 @@
                     <div class="row">
                     
                         <canvas id="c" width="400" height="400"></canvas>
+                        <!-- Modal -->
+                        <div class="modal fade" id="resistorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add A New Resistor</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <form>
+                                                <div class="row">
+
+                                                    <div class="col-md-6 form-group">
+                                                      <label for="resistorFirstPin">First Pin Location</label>
+                                                      <input type="number" class="form-control" id="resistorFirstPin" placeholder="First Pin">
+                                                
+                                                    </div>
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="resistorSecondPin">Second Pin Location</label>
+                                                        <input type="number" class="form-control" id="resistorSecondPin"  placeholder="Second Pin">
+                                                    
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 form-group">
+                                                        <label for="resistorAmount">Amount</label>
+                                                        <div class="input-group flex-nowrap">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="addon-wrapping">Ω</span>
+                                                        </div>
+                                                        <input type="number" class="form-control" id="resistorAmount" aria-describedby="addon-wrapping" placeholder="Amount of resistor in Ohm">
+                                                        
+                                                    </div>
+                                                    
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                    </div>
+                                                </div>
+                                                    
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary" onclick="createResistor()">Save changes</button>
+                                                    </div>
+                                                    
+                                                  </form>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                            </div>
+
+                             <!-- Modal -->
+                        <div class="modal fade" id="currentSourceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add A New Current Source</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <form>
+                                                    <div class="row">
+    
+                                                        <div class="col-md-6 form-group">
+                                                          <label for="firstPinLocation">First Pin Location</label>
+                                                          <input type="number" class="form-control" id="firstPinLocation" placeholder="First Pin">
+                                                    
+                                                        </div>
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="secondPinLocation">Second Pin Location</label>
+                                                            <input type="number" class="form-control" id="secondPinLocation"  placeholder="Second Pin">
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="currentAmound">Amount</label>
+                                                            <div class="input-group flex-nowrap">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="addon-wrapping">A</span>
+                                                            </div>
+                                                            <input type="number" class="form-control" id="currentAmound" aria-describedby="addon-wrapping" placeholder="Amount of current in Amper">
+                                                            
+                                                        </div>
+                                                        
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                            </div>
+                                                    </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                        
+                                                      </form>
+                                    </div>
+                                    
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                             <!-- Modal -->
+                        <div class="modal fade" id="voltageSourceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add A New Voltage Source </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <form>
+                                                    <div class="row">
+    
+                                                        <div class="col-md-6 form-group">
+                                                          <label for="firstPinLocation">First Pin Location</label>
+                                                          <input type="number" class="form-control" id="firstPinLocation" placeholder="First Pin">
+                                                    
+                                                        </div>
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="secondPinLocation">Second Pin Location</label>
+                                                            <input type="number" class="form-control" id="secondPinLocation"  placeholder="Second Pin">
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="voltageAmount">Amount</label>
+                                                            <div class="input-group flex-nowrap">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="addon-wrapping">V</span>
+                                                            </div>
+                                                            <input type="number" class="form-control" id="voltageAmount" aria-describedby="addon-wrapping" placeholder="Amount of voltage in Volt">
+                                                            
+                                                        </div>
+                                                        
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                            </div>
+                                                    </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                        
+                                                      </form>
+                                    </div>
+                                   
+                                </div>
+                                </div>
+                            </div>
+
+
+                             <!-- Modal -->
+                        <div class="modal fade" id="currentSourceControlledModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add A New Current Source Controlled</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <form>
+                                                    <div class="row">
+    
+                                                        <div class="col-md-6 form-group">
+                                                          <label for="firstPinLocation">First Pin Location</label>
+                                                          <input type="number" class="form-control" id="firstPinLocation" placeholder="First Pin">
+                                                    
+                                                        </div>
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="secondPinLocation">Second Pin Location</label>
+                                                            <input type="number" class="form-control" id="secondPinLocation"  placeholder="Second Pin">
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="currentEquation">Amount</label>
+                                                            <div class="input-group flex-nowrap">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="addon-wrapping">Eq</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" id="currentEquation" aria-describedby="addon-wrapping" placeholder="Amount of voltage in Volt">
+                                                            
+                                                        </div>
+                                                        
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                            </div>
+                                                    </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                        
+                                                      </form>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                            </div>
+
+                                   <!-- Modal -->
+                        <div class="modal fade" id="voltageSourceControlledModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add A New Voltage Source Controlled</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                            <form>
+                                                    <div class="row">
+    
+                                                        <div class="col-md-6 form-group">
+                                                          <label for="firstPinLocation">First Pin Location</label>
+                                                          <input type="number" class="form-control" id="firstPinLocation" placeholder="First Pin">
+                                                    
+                                                        </div>
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="secondPinLocation">Second Pin Location</label>
+                                                            <input type="number" class="form-control" id="secondPinLocation"  placeholder="Second Pin">
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 form-group">
+                                                            <label for="voltageEquation">Amount</label>
+                                                            <div class="input-group flex-nowrap">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="addon-wrapping">Eq</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" id="voltageEquation" aria-describedby="addon-wrapping" placeholder="Amount of voltage in Volt">
+                                                            
+                                                        </div>
+                                                        
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                            </div>
+                                                    </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                        
+                                                      </form>
+                                    </div>
+                                    
+                                </div>
+                                </div>
+                            </div>
                     </div>
                 
                 </div>
@@ -93,6 +364,37 @@
         </div>
         
         <script>
+
+            function createResistor() {
+                console.log("hello");
+                // var firstPin = document.getElementById("#resistorFirstPin").value;
+                // var secondPin = document.getElementById("#resistorSecondPin").value;
+                // var resistorAmount = document.getElementById("#resistorAmount").value;
+                // console.log(firstPin, secondPin, resistorAmount);
+
+            //     fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
+
+            //     // var img1 = myImg.set({ 
+            //     //     left: 100 * firstPin, 
+            //     //     top: 100 * secondPin - 50,
+            //     //     scaleY: scale, 
+            //     //     scaleX: scale
+            //     // });
+                
+            //     // canvas.add(img1);
+            //     elements.add({
+            //         type: "resistor",
+            //         left: firstPin,
+            //         top: secondPin,
+            //         amount: resistorAmount
+            //     });
+            //     console.log(elements);
+            // });
+
+            }
+            var elements = [];
             var canvas = new fabric.Canvas('c', { selection: false });
             var grid = 100;
             // var offset = 33.33;
@@ -120,154 +422,154 @@
 
             // var imgElement = document.getElementById('resistor');
 
-            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 100, 
-                    top: 100 - 50,
-                    scaleY: scale, 
-                    scaleX: scale
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 100, 
+            //         top: 100 - 50,
+            //         scaleY: scale, 
+            //         scaleX: scale
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 300 + 50, 
-                    top: 100,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 90
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 300 + 50, 
+            //         top: 100,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 90
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
 
-            fabric.Image.fromURL('../statics/images/voltageSource.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/voltageSource.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 300 + 50, 
-                    top: 200,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 90
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 300 + 50, 
+            //         top: 200,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 90
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/currentSource.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/currentSource.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 200, 
-                    top: 100 - 50,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 0
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 200, 
+            //         top: 100 - 50,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 0
+            //     });
                 
-                canvas.add(img1); 
-            });
-            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            //     canvas.add(img1); 
+            // });
+            // fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 200, 
-                    top: 300 - 50,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 0
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 200, 
+            //         top: 300 - 50,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 0
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/voltageSource.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/voltageSource.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 100, 
-                    top: 300 -  50,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 0
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 100, 
+            //         top: 300 -  50,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 0
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/currentSource.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/currentSource.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 100 + 50, 
-                    top: 100,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 90
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 100 + 50, 
+            //         top: 100,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 90
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 100 + 50, 
-                    top: 200,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 90
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 100 + 50, 
+            //         top: 200,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 90
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 200 + 50, 
-                    top: 200,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 90
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 200 + 50, 
+            //         top: 200,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 90
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
-            fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-                //i create an extra var for to change some image properties
-                let scale = 100 / myImg.height;
+            // fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+            //     //i create an extra var for to change some image properties
+            //     let scale = 100 / myImg.height;
 
-                var img1 = myImg.set({ 
-                    left: 200 + 50, 
-                    top: 100,
-                    scaleY: scale, 
-                    scaleX: scale,
-                    angle: 90
-                });
+            //     var img1 = myImg.set({ 
+            //         left: 200 + 50, 
+            //         top: 100,
+            //         scaleY: scale, 
+            //         scaleX: scale,
+            //         angle: 90
+            //     });
                 
-                canvas.add(img1); 
-            });
+            //     canvas.add(img1); 
+            // });
 
             // var imgInstance = new fabric.Image(imgElement, {
             //     width: 100,
