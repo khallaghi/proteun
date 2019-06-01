@@ -116,7 +116,7 @@ function createAddResistorWindow(){
         title:'Add New Resistor'
       });
       addResistorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'templates', 'addResistor.html'),
+        pathname: path.join(__dirname, 'templates', 'addElement', 'addResistor.html'),
         protocol: 'file:',
         slashes:true
       }));
