@@ -106,7 +106,7 @@ function createAddWindow(){
       ]
     });
   }
-function createAddResistorWindow(){
+function createAddResistorWindow(elementStr){
     addResistorWindow = new BrowserWindow({
         webPreferences: {
             nodeIntegration: true
@@ -116,7 +116,8 @@ function createAddResistorWindow(){
         title:'Add New Resistor'
       });
       addResistorWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'templates', 'addElement', 'addResistor.html'),
+        pathname: path.join(__dirname, 'templates', 
+        'addElement', elementStr + '.html'),
         protocol: 'file:',
         slashes:true
       }));
@@ -138,9 +139,7 @@ function updateBoard(item) {
 }
 ipcMain.on('item:new', function(e, item){
     console.log(item);
-    createAddResistorWindow();
-    
-
+    createAddResistorWindow(item);
 });
 // Catch item:add
 

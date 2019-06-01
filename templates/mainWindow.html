@@ -32,39 +32,51 @@
                         
                         <div >
                             
-                                <button type="button" class="btn btn-light" id="addResistorBtn">
+                                <button type="button" class="btn btn-light add-element-btn" id="wire">
+                                        <img src="../statics/images/wire.png" class="element-btn">
+                                </button>
+                            
+                                <p class="description">Wire</p>
+                            
+                                <button type="button" class="btn btn-light add-element-btn" id="resistor">
                                         <img src="../statics/images/resistor.png" class="element-btn">
                                 </button>
                             
                                 <p class="description">Resistor</p>
                             
                             
-                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#currentSourceModal">
+                                    <button type="button" class="btn btn-light add-element-btn" id="currentSource">
                                             <img src="../statics/images/currentSource.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Current Source</p>
                             
                            
-                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#voltageSourceModal">
+                                    <button type="button" class="btn btn-light add-element-btn" id="voltageSource">
                                             <img src="../statics/images/voltageSource.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Voltage Source</p>
                             
                            
-                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#currentSourceControlledModal">
+                                    <button type="button" class="btn btn-light add-element-btn" id="currentSourceControlled">
                                             <img src="../statics/images/currentSourceControlled.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Current Source Controlled</p>
                             
                             
-                                    <button type="button" class="btn btn-light" data-toggle="modal" data-target="#voltageSourceControlledModal">
+                                    <button type="button" class="btn btn-light add-element-btn" id="voltageSourceControlled">
                                             <img src="../statics/images/voltageSourceControlled.png" class="element-btn">
                                     </button>
                                 
                                 <p class="description">Voltage Source Controlled</p>
+
+                                <button type="button" class="btn btn-light add-element-btn" id="ground">
+                                        <img src="../statics/images/ground.png" class="element-btn">
+                                </button>
+                            
+                            <p class="description">Ground</p>
                           
                             
                         </div>
@@ -102,9 +114,13 @@
         var canvas = new fabric.Canvas('c', { selection: false });
         var grid = 100;
 
-        document.querySelector("#addResistorBtn").addEventListener('click', (e) => {
-            ipcRenderer.send('item:new', "resistor");
+        $(document).ready(function() {
+            $(".add-element-btn").click(function(event) {
+                console.log(event);
+                ipcRenderer.send('item:new', event.target.id || event.target.parentElement.id);
+            });
         });
+
 
 
         ipcRenderer.on('board:update', function(e, elements){
