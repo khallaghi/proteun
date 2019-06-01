@@ -129,7 +129,7 @@
                                                     
                                                     <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary" onclick="createResistor()">Save changes</button>
+                                                    <button type="button" class="btn btn-primary" onclick="createResistor()">Save changes</button>
                                                     </div>
                                                     
                                                   </form>
@@ -367,10 +367,10 @@
 
             function createResistor() {
                 console.log("hello");
-                // var firstPin = document.getElementById("#resistorFirstPin").value;
-                // var secondPin = document.getElementById("#resistorSecondPin").value;
-                // var resistorAmount = document.getElementById("#resistorAmount").value;
-                // console.log(firstPin, secondPin, resistorAmount);
+                var firstPin = document.getElementById("#resistorFirstPin").value;
+                var secondPin = document.getElementById("#resistorSecondPin").value;
+                var resistorAmount = document.getElementById("#resistorAmount").value;
+                console.log(firstPin, secondPin, resistorAmount);
 
             //     fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
             //     //i create an extra var for to change some image properties
