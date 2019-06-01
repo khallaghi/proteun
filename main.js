@@ -7,7 +7,8 @@ const {app, BrowserWindow, Menu, ipcMain} = electron;
 process.env.NODE_ENV = 'development';
 
 let mainWindow;
-
+let addResistorWindow;
+let elements;
 // Create menu template
 const mainMenuTemplate =  [
     // Each object is a dropdown
@@ -121,16 +122,36 @@ function createAddResistorWindow(){
       }));
       // Handle garbage collection
       addResistorWindow.on('close', function(){
-        addWindow = null;
+        addResistorWindow = null;
     });
+}
+
+function updateBoard(item) {
+    if (elements === undefined) {
+        elements = [];
+    }
+    console.log('elements');
+    console.log(elements);
+    elements.push(item);
+    console.log(elements);
+
 }
 ipcMain.on('item:new', function(e, item){
     console.log(item);
     createAddResistorWindow();
+    
+
 });
 // Catch item:add
-ipcMain.on('resistor:add:firstPin', function(e, item){
+
+ipcMain.on('resistor:add', function(e, item){
     console.log(item);
+    updateBoard(item);
+    console.log('in resistor:add');
+    console.log(elements);
+    mainWindow.webContents.send('board:update', elements);
+    addResistorWindow.close();
+    addResistorWindow = null;
     // mainWindow.webContents.send('resistor:add:firstPin', item);
     // addWindow.close(); 
     // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)

@@ -59,8 +59,25 @@
             function addResistor(e){
                 e.preventDefault();
                 const firstPin = document.querySelector("#resistorFirstPin").value;
-                console.log(firstPin);
-                ipcRenderer.send('resistor:add:firstPin', firstPin);
+                const secondPin = document.querySelector("#resistorSecondPin").value;
+                const amount = document.querySelector("#resistorAmount").value;
+                const ROW = 3;
+                const COL = 3;
+                let item = {
+                    type: 'resistor',
+                    firstPin: {
+                        row: Math.trunc(firstPin / COL),
+                        col: Math.trunc(firstPin % COL),
+                    },
+                    secondPin: {
+                        row: Math.trunc(secondPin / COL),
+                        col: Math.trunc(secondPin % COL)
+                    },
+                    attrs: {
+                        amount
+                    }
+                };
+                ipcRenderer.send('resistor:add', item);
             }
         </script>
     </body>

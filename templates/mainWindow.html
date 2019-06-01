@@ -368,6 +368,9 @@
         const electron = require('electron');
         const {ipcRenderer} = electron;
 
+        var elements = [];
+        var canvas = new fabric.Canvas('c', { selection: false });
+        var grid = 100;
         document.querySelector("#resistorForm").addEventListener('submit', addResistor);
 
         function addResistor(e){
@@ -380,11 +383,78 @@
         document.querySelector("#addResistorBtn").addEventListener('click', (e) => {
             console.log("heyyyy");
             ipcRenderer.send('item:new', "resistor");
-        })
+        });
+
+        ipcRenderer.on('board:update', function(e, elements){
+            console.log('in board:update');
+            updateCanvas(elements);
+        });
             
-            var elements = [];
-            var canvas = new fabric.Canvas('c', { selection: false });
-            var grid = 100;
+        function calculateCord(firstPin, secondPin) {
+            let top, left, angle;
+            const START_TOP = 100; 
+            const START_LEFT = 100;
+            const DIST = 100;
+            
+            if (firstPin === undefined && secondPin === undefined) {
+                throw Error('undefined Pins');
+            }
+            if (firstPin.row === undefined &&
+                firstPin.col === undefined &&
+                secondPin.row === undefined &&
+                secondPin.col === undefined  ) {
+                throw Error('undefined Pins');
+            }
+            let row = firstPin.row;
+            let col = firstPin.col;
+            if (firstPin.col == secondPin.col) {
+                angle = 90;
+                top = (row + Math.trunc(START_TOP / DIST)) * DIST ;
+                left = (col + Math.trunc(START_LEFT / DIST)) * DIST + Math.trunc(DIST / 2);
+            } else if(firstPin.row == secondPin.row) {
+                angle = 0;
+                top = (row + Math.trunc(START_TOP / DIST)) * DIST - Math.trunc(DIST / 2);
+                left = (col + Math.trunc(START_LEFT / DIST)) * DIST;
+            } else {
+                throw Error('Coordinate Error');
+            }
+            console.log('in calculate');
+            console.log( top, left, angle);
+            return {
+                top, 
+                left, 
+                angle
+            };
+            
+        }
+        function updateCanvas(elements) {
+            const IMAGE_HEIGHT = 100;
+            for (let idx in elements) {
+                let element = elements[idx];
+
+                console.log(elements);
+                console.log(element);
+                if (element.type = 'resistor') {
+                    fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                        let scale = IMAGE_HEIGHT / myImg.height;
+                        let {top, left, angle} = calculateCord(element.firstPin, element.secondPin);
+                        console.log('top left angle');
+                        console.log(top, left, angle);
+                        var img1 = myImg.set({ 
+                            left, 
+                            top,
+                            angle,
+                            scaleY: scale, 
+                            scaleX: scale
+                        });
+                        canvas.add(img1);
+                        canvas.renderAll();
+                    });
+                    
+                }
+            }
+        }
+            
             // var offset = 33.33;
             // create grid
 
