@@ -18,12 +18,12 @@
 
         <div class="col-md-6 form-group">
             <label for="resistorFirstPin">First Pin Location</label>
-            <input type="number" class="form-control" id="resistorFirstPin" placeholder="First Pin">
+            <input type="number" class="form-control" id="firstPin" placeholder="first Pin">
     
         </div>
         <div class="col-md-6 form-group">
             <label for="resistorSecondPin">Second Pin Location</label>
-            <input type="number" class="form-control" id="resistorSecondPin"  placeholder="Second Pin">
+            <input type="number" class="form-control" id="secondPin"  placeholder="Second Pin">
         
         </div>
     </div>
@@ -34,7 +34,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text" id="addon-wrapping">Ω</span>
             </div>
-            <input type="number" class="form-control" id="resistorAmount" aria-describedby="addon-wrapping" placeholder="Amount of resistor in Ohm">
+            <input type="number" class="form-control" id="amount" aria-describedby="addon-wrapping" placeholder="Amount of resistor in Ohm">
             
         </div>
         
@@ -59,13 +59,13 @@
 
             function addResistor(e){
                 e.preventDefault();
-                const firstPin = document.querySelector("#resistorFirstPin").value;
-                const secondPin = document.querySelector("#resistorSecondPin").value;
-                const amount = document.querySelector("#resistorAmount").value;
+                const firstPin = document.querySelector("#firstPin").value;
+                const secondPin = document.querySelector("#secondPin").value;
+                const amount = document.querySelector("#amount").value;
                 const ROW = 3;
                 const COL = 3;
                 let item = {
-                    type: 'resistor',
+                    type: 'wire',
                     firstPin: {
                         row: Math.trunc(firstPin / COL),
                         col: Math.trunc(firstPin % COL),
@@ -78,7 +78,7 @@
                         amount
                     }
                 };
-                ipcRenderer.send('resistor:add', item);
+                ipcRenderer.send('element:add', item);
             }
         </script>
     </body>

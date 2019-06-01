@@ -143,7 +143,7 @@ ipcMain.on('item:new', function(e, item){
 });
 // Catch item:add
 
-ipcMain.on('resistor:add', function(e, item){
+ipcMain.on('element:add', function(e, item){
     console.log(item);
     updateBoard(item);
     console.log('in resistor:add');

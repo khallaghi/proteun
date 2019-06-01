@@ -134,25 +134,47 @@
             const START_LEFT = 100;
             const DIST = 100;
             
-            if (firstPin === undefined && secondPin === undefined) {
+            if (firstPin === undefined) {
                 throw Error('undefined Pins');
             }
             if (firstPin.row === undefined &&
-                firstPin.col === undefined &&
-                secondPin.row === undefined &&
-                secondPin.col === undefined  ) {
+                firstPin.col === undefined ) {
                 throw Error('undefined Pins');
             }
             let row = firstPin.row;
             let col = firstPin.col;
-            if (firstPin.col == secondPin.col) {
-                angle = 90;
-                top = (row + Math.trunc(START_TOP / DIST)) * DIST ;
-                left = (col + Math.trunc(START_LEFT / DIST)) * DIST + Math.trunc(DIST / 2);
-            } else if(firstPin.row == secondPin.row) {
+            if (secondPin.row === undefined && secondPin.col === undefined) {
                 angle = 0;
-                top = (row + Math.trunc(START_TOP / DIST)) * DIST - Math.trunc(DIST / 2);
-                left = (col + Math.trunc(START_LEFT / DIST)) * DIST;
+                top = (row + Math.trunc(START_TOP / DIST)) * DIST ;
+                left = (col + Math.trunc(START_LEFT / DIST)) * DIST - Math.trunc(DIST / 2);
+                return {
+                    top, 
+                    left, 
+                    angle
+                };
+            }
+            if (firstPin.col == secondPin.col) {
+                if (firstPin.row < secondPin.row) {
+                    angle = 90;
+                    top = (row + Math.trunc(START_TOP / DIST)) * DIST ;
+                    left = (col + Math.trunc(START_LEFT / DIST)) * DIST + Math.trunc(DIST / 2);
+                } else if (firstPin.row > secondPin.row){
+                    angle = 270;
+                    top = (row + Math.trunc(START_TOP / DIST)) * DIST;
+                    left = (col + Math.trunc(START_LEFT / DIST)) * DIST - Math.trunc(DIST / 2);
+                }
+                
+            } else if(firstPin.row == secondPin.row) {
+                if (firstPin.col < secondPin.col) {
+                    angle = 0;
+                    top = (row + Math.trunc(START_TOP / DIST)) * DIST - Math.trunc(DIST / 2);
+                    left = (col + Math.trunc(START_LEFT / DIST)) * DIST;
+                } else if (firstPin.col > secondPin.col) {
+                    angle = 180;
+                    top = (row + Math.trunc(START_TOP / DIST)) * DIST + Math.trunc(DIST / 2);
+                    left = (col + Math.trunc(START_LEFT / DIST)) * DIST;
+                }
+                
             } else {
                 throw Error('Coordinate Error');
             }
@@ -172,8 +194,8 @@
 
                 console.log(elements);
                 console.log(element);
-                if (element.type = 'resistor') {
-                    fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
+                // if (element.type != 'resistor') {
+                    fabric.Image.fromURL('../statics/images/' + element.type + '.png', function(myImg) {
                         let scale = IMAGE_HEIGHT / myImg.height;
                         let {top, left, angle} = calculateCord(element.firstPin, element.secondPin);
                         console.log('top left angle');
@@ -190,7 +212,7 @@
                         canvas.renderAll();
                     });
                     
-                }
+                // }
             }
         }
             
