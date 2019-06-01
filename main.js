@@ -38,7 +38,11 @@ const mainMenuTemplate =  [
   ];
 
 app.on('ready', function() {
-    mainWindow = new BrowserWindow({});
+    mainWindow = new BrowserWindow({
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
     
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'templates', 'mainWindow.html'),
@@ -101,3 +105,34 @@ function createAddWindow(){
       ]
     });
   }
+function createAddResistorWindow(){
+    addResistorWindow = new BrowserWindow({
+        webPreferences: {
+            nodeIntegration: true
+        },  
+        width: 300,
+        height:200,
+        title:'Add New Resistor'
+      });
+      addResistorWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'templates', 'addResistor.html'),
+        protocol: 'file:',
+        slashes:true
+      }));
+      // Handle garbage collection
+      addResistorWindow.on('close', function(){
+        addWindow = null;
+    });
+}
+ipcMain.on('item:new', function(e, item){
+    console.log(item);
+    createAddResistorWindow();
+});
+// Catch item:add
+ipcMain.on('resistor:add:firstPin', function(e, item){
+    console.log(item);
+    // mainWindow.webContents.send('resistor:add:firstPin', item);
+    // addWindow.close(); 
+    // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)
+    //addWindow = null;
+  });

@@ -32,7 +32,7 @@
                         
                         <div >
                             
-                                    <button type="button" class="btn btn-light"   title="Tooltip on top" data-toggle="modal" data-target="#resistorModal">
+                                    <button type="button" class="btn btn-light" id="addResistorBtn">
                                             <img src="../statics/images/resistor.png" class="element-btn">
                                     </button>
                             
@@ -96,7 +96,7 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                            <form>
+                                            <form id="resistorForm">
                                                 <div class="row">
 
                                                     <div class="col-md-6 form-group">
@@ -123,13 +123,13 @@
                                                     
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                        <img src="../statics/images/helpers/resistor.png" class="modal-helper-image">
                                                     </div>
                                                 </div>
                                                     
                                                     <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" onclick="createResistor()">Save changes</button>
+                                                    <button type="submit" class="btn btn-primary" >Save changes</button>
                                                     </div>
                                                     
                                                   </form>
@@ -177,7 +177,7 @@
                                                         
                                                         </div>
                                                         <div class="col-md-6">
-                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                                <img src="../statics/images/helpers/currentSource.png" class="modal-helper-image">
                                                             </div>
                                                     </div>
                                                         
@@ -232,7 +232,7 @@
                                                         
                                                         </div>
                                                         <div class="col-md-6">
-                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                                <img src="../statics/images/helpers/voltageSource.png" class="modal-helper-image">
                                                             </div>
                                                     </div>
                                                         
@@ -287,7 +287,7 @@
                                                         
                                                         </div>
                                                         <div class="col-md-6">
-                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                                <img src="../statics/images/helpers/currentSourceControlled.png" class="modal-helper-image">
                                                             </div>
                                                     </div>
                                                         
@@ -341,7 +341,7 @@
                                                         
                                                         </div>
                                                         <div class="col-md-6">
-                                                                <img src="../statics/images/resistor.png" class="modal-helper-image">
+                                                                <img src="../statics/images/helpers/voltageSourceControlled.png" class="modal-helper-image">
                                                             </div>
                                                     </div>
                                                         
@@ -365,35 +365,23 @@
         
         <script>
 
-            function createResistor() {
-                console.log("hello");
-                var firstPin = document.getElementById("#resistorFirstPin").value;
-                var secondPin = document.getElementById("#resistorSecondPin").value;
-                var resistorAmount = document.getElementById("#resistorAmount").value;
-                console.log(firstPin, secondPin, resistorAmount);
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
 
-            //     fabric.Image.fromURL('../statics/images/resistor.png', function(myImg) {
-            //     //i create an extra var for to change some image properties
-            //     let scale = 100 / myImg.height;
+        document.querySelector("#resistorForm").addEventListener('submit', addResistor);
 
-            //     // var img1 = myImg.set({ 
-            //     //     left: 100 * firstPin, 
-            //     //     top: 100 * secondPin - 50,
-            //     //     scaleY: scale, 
-            //     //     scaleX: scale
-            //     // });
-                
-            //     // canvas.add(img1);
-            //     elements.add({
-            //         type: "resistor",
-            //         left: firstPin,
-            //         top: secondPin,
-            //         amount: resistorAmount
-            //     });
-            //     console.log(elements);
-            // });
+        function addResistor(e){
+            e.preventDefault();
+            const firstPin = document.querySelector("#resistorFirstPin").value;
+            console.log(firstPin);
+            ipcRenderer.send('resistor:add:firstPin', firstPin);
+        }
 
-            }
+        document.querySelector("#addResistorBtn").addEventListener('click', (e) => {
+            console.log("heyyyy");
+            ipcRenderer.send('item:new', "resistor");
+        })
+            
             var elements = [];
             var canvas = new fabric.Canvas('c', { selection: false });
             var grid = 100;
