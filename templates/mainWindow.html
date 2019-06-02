@@ -19,7 +19,7 @@
                 <div class="col-md-12">
                     <div class="alert submission-alert header" >
                             
-                            <h4 class="display-4 " style="color: white; font-size: 2.5em; text-align: center;">
+                            <h4 class="display-4 " style="color:    #FFFFFF; font-size: 2.5em; text-align: center;">
                                     <img src="../statics/images/resistor-white.png" style="width: 50px; height: auto;">
                                     PROTEUN  
                                 <img src="../statics/images/resistor-white.png" style="width: 50px; height: auto;">
@@ -35,7 +35,7 @@
                     
                           
                         <div class="row misc">
-                                <div class="btn-group">
+                                <div class="btn-group tools">
                                 <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Refresh" id="refresh">
                                         <i class="fas fa-sync"></i>
                                 </button>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                             <div class="row">
-                            <div class="btn-group-vertical">
+                            <div class="btn-group-vertical tools">
                                 <div class="btn-group">
                                 <button type="button" class="btn btn-light add-element-btn" id="wire">
                                         <img src="../statics/images/wire.png" class="element-btn">
@@ -124,7 +124,9 @@
                     
                     <div class="row">
                     
+                        <div class="card card-3">
                         <canvas id="c" width="400" height="400"></canvas>
+                        </div>
                         
                     </div>
                 
@@ -262,7 +264,7 @@
                     let text = new fabric.Text(((i-1)*3+j-1).toString(), {
                         top: i*grid - 2.5*7,
                         left: j*grid - 2*7,
-                        fill: '#0D47A1',    
+                        fill: '#373c42',    
                         fontSize: 15,
                         fontFamily: 'arial'
                     });
