@@ -9,91 +9,119 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/css-doodle/0.7.1/css-doodle.min.js"></script>
         <script src="https://rawgit.com/kangax/fabric.js/master/dist/fabric.js"></script>
 
-
-        <title>The main pad</title>
+        <link href="../statics/fontawesome/css/all.css" rel="stylesheet">
+        <title>Proteun</title>
         <link rel="stylesheet" href="../statics/css/mainWindow.css">
 
     </head>
     <body>
-            <div class="alert alert-primary" role="alert">
-                    <h1>The Proteun <img src="../statics/images/resistor.png" style="width: 50px; height: 50px;"></h1>
-                  </div>
+            <div class="row" role="alert">
+                <div class="col-md-12">
+                    <div class="alert submission-alert header" >
+                            
+                            <h4 class="display-4 " style="color: white; font-size: 2.5em; text-align: center;">
+                                    <img src="../statics/images/resistor-white.png" style="width: 50px; height: auto;">
+                                    PROTEUN  
+                                <img src="../statics/images/resistor-white.png" style="width: 50px; height: auto;">
+                            </h4>
+                    </div>
+            </div>
+            </div>
 
-        <div class="container">
+        <div class="container main-window">
             
             <div class="row">    
-                <div class="col-md-3">
-                    <div class="row">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item active" aria-current="page">Tools Pane</li>
-                                </ol>
-                            </nav>
-                        
-                        <div >
-                            
+                <div class="col-3">
+                    
+                          
+                        <div class="row misc">
+                                <div class="btn-group">
+                                <button type="button" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Refresh" id="refresh">
+                                        <i class="fas fa-sync"></i>
+                                </button>
+                                <button type="button" class="btn btn-dark" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Clear All" id="clearAll">
+                                        <i class="fas fa-trash-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-dark" class="btn btn-dark" data-toggle="tooltip" data-placement="top" title="Analyze" id="analyze">
+                                            
+                                        <i class="fas fa-play" ></i>
+                                </button>
+                                </div>
+                            </div>
+                            <div class="row misc">
+                                    <div class="btn-group">
+                                    
+                                    
+                                    </div>
+                                </div>
+                            <div class="row">
+                            <div class="btn-group-vertical">
+                                <div class="btn-group">
                                 <button type="button" class="btn btn-light add-element-btn" id="wire">
                                         <img src="../statics/images/wire.png" class="element-btn">
                                 </button>
                             
-                                <p class="description">Wire</p>
+                               
                             
                                 <button type="button" class="btn btn-light add-element-btn" id="resistor">
                                         <img src="../statics/images/resistor.png" class="element-btn">
                                 </button>
+                            </div>
+                               
                             
-                                <p class="description">Resistor</p>
-                            
-                            
+                            <div class="btn-group">
                                     <button type="button" class="btn btn-light add-element-btn" id="currentSource">
                                             <img src="../statics/images/currentSource.png" class="element-btn">
                                     </button>
                                 
-                                <p class="description">Current Source</p>
+                                
                             
                            
                                     <button type="button" class="btn btn-light add-element-btn" id="voltageSource">
                                             <img src="../statics/images/voltageSource.png" class="element-btn">
                                     </button>
                                 
-                                <p class="description">Voltage Source</p>
+                            </div>
                             
-                           
+                            <div class="btn-group">
                                     <button type="button" class="btn btn-light add-element-btn" id="currentSourceControlled">
                                             <img src="../statics/images/currentSourceControlled.png" class="element-btn">
                                     </button>
                                 
-                                <p class="description">Current Source Controlled</p>
+                                
                             
                             
                                     <button type="button" class="btn btn-light add-element-btn" id="voltageSourceControlled">
                                             <img src="../statics/images/voltageSourceControlled.png" class="element-btn">
                                     </button>
+                                </div>
                                 
-                                <p class="description">Voltage Source Controlled</p>
 
                                 <button type="button" class="btn btn-light add-element-btn" id="ground">
                                         <img src="../statics/images/ground.png" class="element-btn">
                                 </button>
+                            </div>
+                            </div>
+                        
                             
-                            <p class="description">Ground</p>
+                                    <!-- <nav aria-label="breadcrumb">
+                                            <ol class="breadcrumb">
+                                                <li class="breadcrumb-item active" aria-current="page">The Play Ground</li>
+                                            </ol>
+                                        </nav> -->
+                                       
+                                
+                            </div>
+                            <!-- <p class="description">Ground</p> -->
                           
                             
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-9">
+                        
+                    
+                <div class="col-9">
                     
 
                     
-                    <div class="row">
-                            <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item active" aria-current="page">The Play Ground</li>
-                                    </ol>
-                                </nav>
-                        
-                    </div>
+                    
                     <div class="row">
                     
                         <canvas id="c" width="400" height="400"></canvas>
@@ -105,6 +133,7 @@
 
         </div>
         
+        
         <script>
 
         const electron = require('electron');
@@ -115,12 +144,19 @@
         var grid = 100;
 
         $(document).ready(function() {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
             $(".add-element-btn").click(function(event) {
                 console.log(event);
                 ipcRenderer.send('item:new', event.target.id || event.target.parentElement.id);
             });
         });
 
+        document.querySelector('#refresh').addEventListener('click', function(e) {
+            ipcRenderer.send('board:update');
+        });
+        document.querySelector('#clearAll').addEventListener('click', function(e) {
+            ipcRenderer.send('element:clear:all');
+        });
 
 
         ipcRenderer.on('board:update', function(e, elements){
@@ -189,6 +225,8 @@
         }
         function updateCanvas(elements) {
             const IMAGE_HEIGHT = 100;
+            canvas.clear();
+            initCanvas();
             for (let idx in elements) {
                 let element = elements[idx];
 
@@ -218,11 +256,17 @@
             
             // var offset = 33.33;
             // create grid
-
-            for (var i = 1; i < (canvas.width / grid); i++) {
-                for (var j = 1; j < (canvas.height / grid); j++) {
-                    console.log(i*grid, j*grid);
-                    canvas.add(new fabric.Circle({
+        function initCanvas() {
+            for (var i = 1; i < Math.trunc(canvas.width / grid); i++) {
+                for (var j = 1; j < Math.trunc(canvas.height / grid); j++) {
+                    let text = new fabric.Text(((i-1)*3+j-1).toString(), {
+                        top: i*grid - 2.5*7,
+                        left: j*grid - 2*7,
+                        fill: '#0D47A1',    
+                        fontSize: 15,
+                        fontFamily: 'arial'
+                    });
+                    let block = new fabric.Circle({
                         left: i*grid - 7, 
                         top: j*grid - 7, 
                         radius: 7, 
@@ -232,9 +276,17 @@
                         centeredRotation: true,
                         selectable: false,
                         opacity: 1
-                    }));
+                    });
+                    canvas.add(block);
+                    canvas.add(text);
+                    canvas.bringToFront(text);
+                    console.log(i, j);
+                    
                 }
             }
+        }
+            
+        initCanvas();
 
             
             // var imgInstance = new fabric.Image(imgElement, {

@@ -1,17 +1,44 @@
 canvas {
-    border: 1px solid #ccc;
+    border: 1px solid gray;
+    border-radius: 2%;
    margin-left: 20%;
-   margin-top: 20%;
-   padding: 5%;
+   margin-top: 0px;
+   padding: 0px;
+   
+   /* background-color: whitesmoke; */
+
 }
-
-
+.misc {
+    margin-bottom: 7%;
+}
+.main-window {
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.btn-light {
+    /* width: 3em; */
+    /* background-color: #82B1FF;s */
+}
+/* .add-element-btn {
+    width: 5em;
+} */
+body {
+    background-color: white;
+}
+.header {
+    /* background-color: #82B1FF;  */
+    background-color: #0D47A1;
+    border-radius: 0px;
+    /* padding: 0em;
+    padding-left: 2em; */
+}
 .element-btn{
     /* background:url(../statics/images/resistor.png) no-repeat;  */
     cursor:pointer;
     border:none;
-    width:40px;
-    height:40px;
+    width: 36px;
+    height:auto;
 
   }
 

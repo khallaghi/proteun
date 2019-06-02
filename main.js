@@ -111,9 +111,9 @@ function createAddResistorWindow(elementStr){
         webPreferences: {
             nodeIntegration: true
         },  
-        width: 300,
-        height:200,
-        title:'Add New Resistor'
+        width: 500,
+        height:500,
+        title:'Add New Element'
       });
       addResistorWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'templates', 
@@ -137,12 +137,44 @@ function updateBoard(item) {
     console.log(elements);
 
 }
+
+function deleteElement(firstPin, secondPin) {
+    for(let i in elements) {
+        let element = elements[i];
+        if (element.firstPin.row == firstPin.row &&
+            element.firstPin.col == firstPin.col &&
+            element.secondPin.row == secondPin.row &&
+            element.secondPin.col == secondPin.col) {
+                delete element;
+            }
+    }
+}
+
+function clearAll() {
+    elements = [];
+}
 ipcMain.on('item:new', function(e, item){
     console.log(item);
     createAddResistorWindow(item);
 });
 // Catch item:add
 
+ipcMain.on('board:update', function(e) {
+    mainWindow.webContents.send('board:update', elements);
+});
+
+ipcMain.on('element:delete', function(e, item){
+    deleteElement(item.firstPin, item.secondPin);
+    mainWindow.webContents.send('board:update', elements);
+});
+
+ipcMain.on('element:clear:all', function(e) {
+    console.log('on elements:clear:all');
+    console.log(elements);
+    clearAll();
+    mainWindow.webContents.send('board:update', elements);
+
+})
 ipcMain.on('element:add', function(e, item){
     console.log(item);
     updateBoard(item);

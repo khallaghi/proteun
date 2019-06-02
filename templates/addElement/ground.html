@@ -12,11 +12,16 @@
     
     </head>
     <body>
-        <h1>Add New Ground</h1>
+            <div class="container">
+                    <div class="row">
+                            <div class="col-sm">
+        <h4 class="display-4" style="color: #7a7874">Add New Ground</h4>
+        </div>
+        </div>
 <form id="resistorForm">
     <div class="row">
 
-        <div class="col-md-6 form-group">
+        <div class="col-6 form-group">
             <label for="resistorFirstPin">First Pin Location</label>
             <input type="number" class="form-control" id="firstPin" placeholder="First Pin">
     
@@ -24,29 +29,19 @@
         
     </div>
     <div class="row">
-        <div class="col-md-6 form-group">
-            <label for="resistorAmount">Amount</label>
-            <div class="input-group flex-nowrap">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="addon-wrapping">Ω</span>
-            </div>
-            <input type="number" class="form-control" id="amount" aria-describedby="addon-wrapping" placeholder="Amount of resistor in Ohm">
-            
-        </div>
         
-        </div>
         <div class="col-md-6">
-            <img src="../../statics/images/helpers/resistor.png" class="modal-helper-image">
+            <img src="../../statics/images/helpers/ground.png" class="modal-helper-image">
         </div>
     </div>
         
         <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
         <button type="submit" class="btn btn-primary" >Save changes</button>
         </div>
         
         </form>
-
+</div>
         <script>
             const electron = require('electron');
             const {ipcRenderer} = electron;
@@ -56,8 +51,6 @@
             function addResistor(e){
                 e.preventDefault();
                 const firstPin = document.querySelector("#firstPin").value;
-                // const secondPin = document.querySelector("#secondPin").value;
-                const amount = document.querySelector("#amount").value;
                 const ROW = 3;
                 const COL = 3;
                 let item = {
@@ -71,7 +64,7 @@
                         col: undefined
                     },
                     attrs: {
-                        amount
+                        
                     }
                 };
                 ipcRenderer.send('element:add', item);
