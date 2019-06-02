@@ -1,16 +1,23 @@
 # Proteun
-simple electronic circuit analyzer. 
 
-## instruction
-make sure you have nodejs on your computer
-then in the root directory of project:
-to install dependencies run:
+Simple electronic circuit analyzer.  
+
+
+
+## Instruction
+In the root directory of project  
+* make sure you have nodejs on your computer.  
+
+* Install dependencies:
 ```
 npm install
 ```
-and then to run project:
+* Run project:
 ```
 npm start
 ```
 
-then enjoy.
+enjoy :)
+
+## License
+MIT
