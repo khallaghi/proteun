@@ -1,7 +1,7 @@
 # Proteun
 
 Simple electronic circuit analyzer.  
-
+![](introduction.png)
 
 
 ## Instruction
