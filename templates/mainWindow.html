@@ -159,8 +159,16 @@
         document.querySelector('#clearAll').addEventListener('click', function(e) {
             ipcRenderer.send('element:clear:all');
         });
+        document.querySelector('#analyze').addEventListener('click', function(e) {
+            ipcRenderer.send('analyze');
+        });
 
 
+
+        ipcRenderer.on('analyze:result', function(e, result) {
+            console.log('HERE IN ANALYZE RESULT');
+        });
+        
         ipcRenderer.on('board:update', function(e, elements){
             console.log('in board:update');
             updateCanvas(elements);

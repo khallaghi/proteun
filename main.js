@@ -137,6 +137,11 @@ function deleteElement(firstPin, secondPin) {
 function clearAll() {
     elements = [];
 }
+
+function analyze(){
+  console.log('here in analyze func');
+}
+
 ipcMain.on('item:new', function(e, item){
     console.log(item);
     createAddResistorWindow(item);
@@ -167,8 +172,9 @@ ipcMain.on('element:add', function(e, item){
     mainWindow.webContents.send('board:update', elements);
     addResistorWindow.close();
     addResistorWindow = null;
-    // mainWindow.webContents.send('resistor:add:firstPin', item);
-    // addWindow.close(); 
-    // Still have a reference to addWindow in memory. Need to reclaim memory (Grabage collection)
-    //addWindow = null;
+  });
+
+  ipcMain.on('analyze', function(e) {
+    result = analyze();
+    mainWindow.webContents.send('analyze:result', result);
   });
