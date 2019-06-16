@@ -4,6 +4,7 @@ const path = require('path')
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
+const COL = 3;
 process.env.NODE_ENV = 'development';
 
 let mainWindow;
@@ -138,8 +139,83 @@ function clearAll() {
     elements = [];
 }
 
+function find_gnd_node() {
+  for(let i in elements){
+    let element = elements[i];
+    if (element.type == 'ground') {
+      return element.firstPin;
+    }
+  }
+}
+
+function single_digit_cord(pin) {
+  return Math.trunc(pin.row * COL) + Math.trunc(pin.col);
+}
+
+function row_col_cord(pinNum) {
+  return {
+    row: Math.trunc(pinNum / COL),
+    col: Math.trunc(pinNum % COL),
+  }
+}
+
+function find_idx_set(pin, nodeSet) {
+  for (let i in nodeSet) {
+    if (pin in nodeSet) {
+      return i;
+    }
+  }
+  return undefined;
+}
+
+function set_node(isWire, firstPin, secondPin, nodeSet) {
+  let firstSetIdx = find_idx_set(firstPin, nodeSet); 
+  let secondSetIdx = find_idx_set(secondPin, nodeSet);
+  if (isWire) {
+    if (firstSetIdx !== undefined && secondSetIdx !== undefined) {
+      nodeSet = nodeSet[firstSetIdx].concat(nodeSet[secondSetIdx]);
+      nodeSet.splice(secondSetIdx, 1);
+    } else if (firstSetIdx === undefined && secondSetIdx !== undefined) {
+      nodeSet[secondSetIdx].push(firstPin);
+    } else if (firstSetIdx !== undefined && secondSetIdx === undefined) {
+      nodeSet[firstSetIdx].push(secondPin);
+    } else if (firstSetIdx === undefined && secondSetIdx === undefined) {
+      nodeSet.push([firstPin, secondPin]);
+    }
+  } else {
+    if (firstSetIdx === undefined) {
+      nodeSet.push([firstPin]);
+    }
+    if (secondSetIdx === undefined) {
+      nodeSet.push([secondPin]);
+    }
+  }
+} 
+
+function group_nodes(nodeSet) {
+  let gndNode = single_digit_cord(find_gnd_node());
+  let nodeSet = [[gndNode]];
+  for (let i in elements) {
+    let element = elements[i];
+    if (element.type != 'ground') {
+      let isWire = element.type == 'wire';
+      set_node(isWire,
+        single_digit_cord(element.firstPin),
+        single_digit_cord(element.secondPin),
+        nodeSet);
+    }
+  }
+  return nodeSet;
+}
+
 function analyze(){
   console.log('here in analyze func');
+  mna_mat = [];
+  mna_rhs_vector = [];
+  nodeSet = [];
+  nodeSet = group_nodes(nodeSet);
+  
+  
 }
 
 ipcMain.on('item:new', function(e, item){
