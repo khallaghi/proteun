@@ -164,8 +164,29 @@
         });
 
 
+        function writeOnCanvas(data, i, j) {
+            console.log(i, j, data);
+            let text = new fabric.Text(data, {
+                top: (i+1)*grid - 3.5*10,
+                left: (j+1)*grid - 2.5*10,
+                fill: '#3F51B5',    
+                fontSize: 16,
+                fontFamily: 'arial',
+                textBackgroundColor: 'white',
+                opacity: 0.8
+            });
+            canvas.add(text);
+            canvas.renderAll();
+        }
 
         ipcRenderer.on('analyze:result', function(e, result) {
+            for (let i in result) {
+                let item = result[i];
+                console.log('ITEM');
+                console.log(item);
+                let data = item.label + ' = ' + item.value;
+                writeOnCanvas(data, item.row, item.col);
+            }
             console.log('HERE IN ANALYZE RESULT');
         });
         
@@ -173,7 +194,7 @@
             console.log('in board:update');
             updateCanvas(elements);
         });
-            
+
         function calculateCord(firstPin, secondPin) {
             let top, left, angle;
             const START_TOP = 100; 

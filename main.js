@@ -1,8 +1,10 @@
 const electron = require('electron')
 const url = require('url')
 const path = require('path')
+const math = require('mathjs')
 
 const fs = require('fs');  
+
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 const COL = 3;
@@ -171,28 +173,28 @@ function find_idx_set(pin, nodeSet) {
       return i;
     }
   }
-  return undefined;
+  return -1;
 }
 
 function set_node(isWire, firstPin, secondPin, nodeSet) {
   let firstSetIdx = find_idx_set(firstPin, nodeSet); 
   let secondSetIdx = find_idx_set(secondPin, nodeSet);
   if (isWire) {
-    if (firstSetIdx !== undefined && secondSetIdx !== undefined) {
+    if (firstSetIdx !== -1 && secondSetIdx !== -1) {
       nodeSet[firstSetIdx] = nodeSet[firstSetIdx].concat(nodeSet[secondSetIdx]);
       nodeSet.splice(secondSetIdx, 1);
-    } else if (firstSetIdx === undefined && secondSetIdx !== undefined) {
+    } else if (firstSetIdx === -1 && secondSetIdx !== -1) {
       nodeSet[secondSetIdx].push(firstPin);
-    } else if (firstSetIdx !== undefined && secondSetIdx === undefined) {
+    } else if (firstSetIdx !== -1 && secondSetIdx === -1) {
       nodeSet[firstSetIdx].push(secondPin);
-    } else if (firstSetIdx === undefined && secondSetIdx === undefined) {
+    } else if (firstSetIdx === -1 && secondSetIdx === -1) {
       nodeSet.push([firstPin, secondPin]);
     }
   } else {
-    if (firstSetIdx === undefined) {
+    if (firstSetIdx === -1) {
       nodeSet.push([firstPin]);
     }
-    if (secondSetIdx === undefined) {
+    if (secondSetIdx === -1) {
       nodeSet.push([secondPin]);
     }
   }
@@ -228,11 +230,21 @@ function group_items(nodeSet) {
 
   for (let i in elements) {
     let element = elements[i];
+    if (element.type === 'wire' || 
+        element.type === 'ground') {
+          continue;
+        }
+
+    if (!element.attrs || element.attrs.amount === undefined ) {
+      continue;
+    }
+
     let item = {
-      amount: parseInt(element.attr.amount),
-      firstSet: find_idx_set(single_digit_cord(element.firstPin)),
-      secondSet: find_idx_set(single_digit_cord(element.secondPin))
+      amount: parseInt(element.attrs.amount),
+      firstSet: parseInt(find_idx_set(single_digit_cord(element.firstPin), nodeSet)),
+      secondSet: parseInt(find_idx_set(single_digit_cord(element.secondPin), nodeSet))
     };
+
     if (element.type === 'resistor') {
       resistors.push(item);
     } else if (element.type === 'voltageSource') {
@@ -250,10 +262,93 @@ function group_items(nodeSet) {
 
 }
 
+function initial_mtx(nodeSet, voltageSource) {
+  const len = nodeSet.length + voltageSource.length;
+  let mnaMainMtx = (new Array(len)).fill().map(() => { return new Array(len).fill(0);});
+  let mnaRhsMtx = new Array(len).fill(0);
+  return {
+    mnaMainMtx,
+    mnaRhsMtx
+  };
+}
+
+function place_resistor_mna_mtx(mnaMainMtx, resistor) {
+  if (resistor.firstSet !== -1) {
+    mnaMainMtx[resistor.firstSet][resistor.firstSet] += 1/resistor.amount;
+  } 
+  if (resistor.secondSet !== -1) {
+    mnaMainMtx[resistor.secondSet][resistor.secondSet] += 1/resistor.amount;
+  }
+  if (resistor.firstSet !== -1 && 
+      resistor.secondSet !== -1) {
+        mnaMainMtx[resistor.firstSet][resistor.secondSet] += -1/resistor.amount;
+        mnaMainMtx[resistor.secondSet][resistor.firstSet] += -1/resistor.amount;
+      }
+  return mnaMainMtx;
+}
+
+function handle_resistors(resistors, mnaMainMtx) {
+  for (let i in resistors) {
+    let resistor = resistors[i];
+    mnaMainMtx = place_resistor_mna_mtx(mnaMainMtx, resistor);
+  }
+  return mnaMainMtx;
+}
+
+function place_current_src_rhs_mtx(currentSrc, mnaRhsMtx) {
+  if (currentSrc.firstSet !== -1) {
+    mnaRhsMtx[currentSrc.firstSet] += -currentSrc.amount;
+  }
+  if (currentSrc.secondSet !== -1) {
+    mnaRhsMtx[currentSrc.secondSet] += currentSrc.amount;
+  }
+  return mnaRhsMtx;
+}
+
+function handle_current_sources(currentSources, mnaRhsMtx) {
+  for (let i in currentSources) {
+    let currentSrc = currentSources[i];
+    mnaRhsMtx = place_current_src_rhs_mtx(currentSrc, mnaRhsMtx);
+  }
+  return mnaRhsMtx;
+}
+
+function place_voltage_src_mna_mtx(voltageSrc, mnaMainMtx, mnaRhsMtx, resistorsSize, idx) {
+  if (voltageSrc.firstSet !== -1) {
+    mnaMainMtx[resistorsSize + idx][voltageSrc.firstSet] += -1;
+    mnaMainMtx[voltageSrc.firstSet][resistorsSize + idx] += -1;
+    mnaRhsMtx[resistorsSize + idx] += voltageSrc.amount;
+  }
+  if (voltageSrc.secondSet !== -1) {
+    mnaMainMtx[resistorsSize + idx][voltageSrc.secondSet] += 1;
+    mnaMainMtx[voltageSrc.secondSet][resistorsSize + idx] += 1;
+    mnaRhsMtx[resistorsSize + idx] += voltageSrc.amount;
+  }
+
+  return {mnaMainMtx, mnaRhsMtx};
+
+}
+
+function handle_voltage_sources( voltageSources, mnaMainMtx, mnaRhsMtx, resistorsSize) {
+  for (let i in voltageSources) {
+    let voltageSrc = voltageSources[i];
+    let result = place_voltage_src_mna_mtx(voltageSrc, mnaMainMtx, mnaRhsMtx, resistorsSize, i);
+    mnaMainMtx = result.mnaMainMtx;
+    mnaRhsMtx = result.mnaRhsMtx;
+  }
+
+  return {
+    mnaMainMtx,
+    mnaRhsMtx
+  };
+}
+
+function solveMtx(mnaMainMtx, mnaRhsMtx) {
+  return math.lusolve(mnaMainMtx, mnaRhsMtx);
+}
+
 function analyze(){
   console.log('here in analyze func');
-  mna_main_mtx = [];
-  mna_rhs_mtx = [];
 
   let nodeSet = group_nodes();
 
@@ -261,15 +356,48 @@ function analyze(){
 
   let {resistors, voltageSources, currentSources} = group_items(nodeSet);
 
-  let {mna_main_mtx, mna_rhs_mtx} = initial_mtx(nodeSet, voltageSources);
+  let {mnaMainMtx, mnaRhsMtx} = initial_mtx(nodeSet, voltageSources);
 
-  handle_resistors(resistors, mna_main_mtx);
-  handle_current_sources(currentSources, mna_rhs_mtx);
-  handle_voltage_sources(voltageSources, mna_main_mtx, mna_rhs_mtx);
+  mnaMainMtx = handle_resistors(resistors, mnaMainMtx);
+  mnaRhsMtx = handle_current_sources(currentSources, mnaRhsMtx);
+  let tmpResult = handle_voltage_sources(voltageSources, mnaMainMtx, mnaRhsMtx, resistors.length);
+  mnaMainMtx = tmpResult.mnaMainMtx;
+  mnaRhsMtx = tmpResult.mnaRhsMtx;
 
-  results = solve_mtx(mna_main_mtx, mna_rhs_mtx);
+  console.log('FILLED MAIN MTX');
+  console.log(mnaMainMtx);
+  console.log('FILLED RHS MTX');
+  console.log(mnaRhsMtx);
 
-  return results;
+  let result = solveMtx(mnaMainMtx, mnaRhsMtx);
+
+  console.log('RESULTS');
+  console.log(result);
+  finalResult = [];
+  for (let i in nodeSet) {
+    for (let j in nodeSet[i]) {
+      let pin = row_col_cord(nodeSet[i][j]);
+      let item = {
+        row: pin.row,
+        col: pin.col,
+        label: 'V' + i,
+        value: result[i][0]
+      };
+      finalResult.push(item);
+    }
+  }
+  for (let i in gndNodeSet[0]) {
+    let pin = row_col_cord(gndNodeSet[0][i]);
+    let item = {
+      row: pin.row,
+      col: pin.col,
+      label: 'Vgnd',
+      value: 0
+    };
+    finalResult.push(item);
+  }
+  //TODO: calculate currents as well as voltages
+  return finalResult;
 }
 
 ipcMain.on('item:new', function(e, item){
