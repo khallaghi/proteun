@@ -11,6 +11,9 @@
 # Icon must end with two \r
 Icon
 
+init.json
+.vscode
+
 # Thumbnails
 ._*
 
