@@ -13,10 +13,15 @@ process.env.NODE_ENV = 'development';
 let mainWindow;
 let addResistorWindow;
 let elements = [];
-const filePath = path.join(__dirname, 'init.json');
+const filePath = path.join(__dirname,'sample_circuites', 'init2.json');
 
-let data = fs.readFileSync(filePath, {encoding: 'utf-8'});
-elements = JSON.parse(data);
+try {
+  let data = fs.readFileSync(filePath, {encoding: 'utf-8'});
+  elements = JSON.parse(data);
+} catch(err) {
+  console.log(err.message);
+}
+
 console.log(elements);
 // Create menu template
 const mainMenuTemplate =  [
@@ -332,7 +337,7 @@ function place_voltage_src_mna_mtx(voltageSrc, mnaMainMtx, mnaRhsMtx, resistorsS
 function handle_voltage_sources( voltageSources, mnaMainMtx, mnaRhsMtx, resistorsSize) {
   for (let i in voltageSources) {
     let voltageSrc = voltageSources[i];
-    let result = place_voltage_src_mna_mtx(voltageSrc, mnaMainMtx, mnaRhsMtx, resistorsSize, i);
+    let result = place_voltage_src_mna_mtx(voltageSrc, mnaMainMtx, mnaRhsMtx, resistorsSize, parseInt(i));
     mnaMainMtx = result.mnaMainMtx;
     mnaRhsMtx = result.mnaRhsMtx;
   }
