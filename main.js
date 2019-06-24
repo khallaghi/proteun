@@ -13,7 +13,7 @@ process.env.NODE_ENV = 'development';
 let mainWindow;
 let addResistorWindow;
 let elements = [];
-const filePath = path.join(__dirname,'sample_circuites', 'init2.json');
+const filePath = path.join(__dirname,'sample_circuites', 'init3.json');
 
 try {
   let data = fs.readFileSync(filePath, {encoding: 'utf-8'});
@@ -318,6 +318,8 @@ function handle_current_sources(currentSources, mnaRhsMtx) {
   return mnaRhsMtx;
 }
 
+//TODO: fix resistorsSize to nodeSet.lenght
+
 function place_voltage_src_mna_mtx(voltageSrc, mnaMainMtx, mnaRhsMtx, resistorsSize, idx) {
   if (voltageSrc.firstSet !== -1) {
     mnaMainMtx[resistorsSize + idx][voltageSrc.firstSet] += -1;
@@ -352,6 +354,75 @@ function solveMtx(mnaMainMtx, mnaRhsMtx) {
   return math.lusolve(mnaMainMtx, mnaRhsMtx);
 }
 
+function get_current_resistor(element, nodeSet, result) {
+  let firstGroupNodeIdx = find_idx_set(single_digit_cord(element.firstPin),nodeSet);
+  let secondGroupNodeIdx = find_idx_set(single_digit_cord(element.secondPin), nodeSet);
+  let firstVoltage = 0, secodVoltage = 0;
+  if (firstGroupNodeIdx !== -1) {
+    firstVoltage = result[firstGroupNodeIdx][0];
+  }
+  if (secondGroupNodeIdx !== -1) {
+    secodVoltage = result[secondGroupNodeIdx][0];
+  }
+  return (secodVoltage - firstVoltage) / parseInt(element.attrs.amount);
+}
+
+function find_voltage_src_idx(element, voltageSources, nodeSet) {
+  let firstSet = find_idx_set(single_digit_cord(element.firstPin) ,nodeSet);
+  let secondSet = find_idx_set(single_digit_cord(element.secondPin), nodeSet);
+  for (let i in voltageSources) {
+    if (parseInt(element.attrs.amount) ===
+          parseInt(voltageSources[i].amount) ) {
+            if (voltageSources[i].firstSet === firstSet && 
+              voltageSources[i].secondSet === secondSet ) {
+                return i;
+              }
+              if (voltageSources[i].secondSet === firstSet && 
+                voltageSources[i].firstSet === secondSet ) {
+                  return i;
+                }
+          }
+  }
+  return -1;
+}
+
+function calculate_currents(nodeSet, voltageSources, result) {
+  let currents = [];
+  for (let i in elements) {
+    let element = elements[i];
+    if (element.type === 'resistor') {
+      let current = get_current_resistor(element, nodeSet, result);
+      let item = {
+        firstPin: element.firstPin,
+        secondPin: element.secondPin,
+        value: current,
+        label: 'A'
+      };
+      currents.push(item);
+    } else if (element.type === 'currentSource') {
+      let item = {
+        firstPin: element.firstPin,
+        secondPin: element.secondPin,
+        value: element.attrs.amount,
+        label: 'A'
+      };
+      currents.push(item);
+      // TODO sould check current measurment for voltage sources
+    } else if (element.type === 'voltageSource') {
+      let idx = find_voltage_src_idx(element, voltageSources, nodeSet);
+      let current = result[nodeSet.length + idx][0];
+      let item = {
+        firstPin: element.firstPin,
+        secondPin: element.secondPin,
+        value: current,
+        label: 'A'
+      };
+      currents.push(item);
+    }
+  }
+  return currents;
+}
+
 function analyze(){
   console.log('here in analyze func');
 
@@ -378,7 +449,10 @@ function analyze(){
 
   console.log('RESULTS');
   console.log(result);
-  finalResult = [];
+  let currents = calculate_currents(nodeSet, voltageSources, result);
+  console.log('CURRENTS');
+  console.log(currents);
+  let voltages = [];
   for (let i in nodeSet) {
     for (let j in nodeSet[i]) {
       let pin = row_col_cord(nodeSet[i][j]);
@@ -388,7 +462,7 @@ function analyze(){
         label: 'V' + i,
         value: result[i][0]
       };
-      finalResult.push(item);
+      voltages.push(item);
     }
   }
   for (let i in gndNodeSet[0]) {
@@ -399,10 +473,13 @@ function analyze(){
       label: 'Vgnd',
       value: 0
     };
-    finalResult.push(item);
+    voltages.push(item);
   }
   //TODO: calculate currents as well as voltages
-  return finalResult;
+  return {
+    voltages,
+    currents
+  };
 }
 
 ipcMain.on('item:new', function(e, item){

@@ -179,13 +179,31 @@
             canvas.renderAll();
         }
 
+        function single_digit_cord(pin) {
+            const COL = 3;
+            return Math.trunc(pin.row * COL) + Math.trunc(pin.col);
+        }
+
         ipcRenderer.on('analyze:result', function(e, result) {
-            for (let i in result) {
-                let item = result[i];
+            console.log('IN RENDER RESULT');
+            console.log(result);
+            for (let i in result.voltages) {
+                let item = result.voltages[i];
                 console.log('ITEM');
                 console.log(item);
                 let data = item.label + ' = ' + item.value;
                 writeOnCanvas(data, item.row, item.col);
+            }
+
+            for (let i in result.currents) {
+                let item = result.currents[i];
+                let labelFirstPin = single_digit_cord(item.firstPin);
+                let labelSecondPin = single_digit_cord(item.secondPin);
+                let data = `I[${labelFirstPin},${labelSecondPin}]=${item.value}`;
+                let row = (item.firstPin.row + item.secondPin.row) / 2;
+                let col = (item.firstPin.col + item.secondPin.col) / 2;
+                writeOnCanvas(data, row ,col);
+
             }
             console.log('HERE IN ANALYZE RESULT');
         });
