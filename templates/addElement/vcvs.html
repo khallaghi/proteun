@@ -33,19 +33,25 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm form-group">
+        <div class="col-4 form-group">
+            <label for="resistorAmount">First Pin</label>
+            <input type="number" class="form-control" id="firstControlled" aria-describedby="addon-wrapping" placeholder="First Pin">
+            
+        </div>
+        <div class="col-4 form-group">
+            <label for="resistorAmount">Second Pin</label>
+            <input type="number" class="form-control" id="secondControlled" aria-describedby="addon-wrapping" placeholder="Second Pin">
+            
+        </div>
+        <div class="col-4 form-group">
             <label for="resistorAmount">Amount</label>
-            <div class="input-group flex-nowrap">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="addon-wrapping">Eq</span>
-            </div>
-            <input type="number" class="form-control" id="equation" aria-describedby="addon-wrapping" placeholder="Equation of controlled source">
+            <input type="number" class="form-control" id="amount" aria-describedby="addon-wrapping" placeholder="amount">
             
         </div>
         
         </div>
         <div class="col-md-6">
-            <img src="../../statics/images/helpers/currentSourceControlled.png" class="modal-helper-image">
+            <img src="../../statics/images/helpers/vcvs.png" class="modal-helper-image">
         </div>
     </div>
         
@@ -66,7 +72,9 @@
                 e.preventDefault();
                 const firstPin = document.querySelector("#firstPin").value;
                 const secondPin = document.querySelector("#secondPin").value;
-                const equation = document.querySelector("#equation").value;
+                const firstControlled = document.querySelector('#fristControlled').value
+                const secondControlled = document.querySelector('#secondControlled').value
+                const amount = document.querySelector('#amount').value;
                 const ROW = 3;
                 const COL = 3;
                 let item = {
@@ -80,7 +88,9 @@
                         col: Math.trunc(secondPin % COL)
                     },
                     attrs: {
-                        equation
+                        firstControlled,
+                        secondControlled,
+                        amount
                     }
                 };
                 ipcRenderer.send('element:add', item);

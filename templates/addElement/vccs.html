@@ -31,21 +31,35 @@
             <input type="number" class="form-control" id="secondPin"  placeholder="Second Pin">
         
         </div>
+
     </div>
     <div class="row">
-        <div class="col-sm form-group">
-            <label for="resistorAmount">Equation</label>
-            <div class="input-group flex-nowrap">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="addon-wrapping">Eq</span>
-            </div>
-            <input type="number" class="form-control" id="equation" aria-describedby="addon-wrapping" placeholder="equation of the controlled source">
+        <div class="col-4 form-group">
+            <label for="resistorAmount">Amount</label>
+           
+            <input type="number" class="form-control" id="amount" aria-describedby="addon-wrapping" placeholder="amount">
             
-        </div>
+        
         
         </div>
+
+        <div class="col-4 form-group">
+            <label for="resistorAmount">First Controller</label>
+           
+            <input type="number" class="form-control" id="firstController" aria-describedby="addon-wrapping" placeholder="First Controller">
+            
+        
+        
+        </div>
+
+        <div class="col-4    form-group">
+            <label for="resistorAmount">SecondController</label>
+           
+            <input type="number" class="form-control" id="secondController" aria-describedby="addon-wrapping" placeholder="Second Controller">
+        </div>
+
         <div class="col-md-6">
-            <img src="../../statics/images/helpers/voltageSourceControlled.png" class="modal-helper-image">
+            <img src="../../statics/images/helpers/vccs.png" class="modal-helper-image">
         </div>
     </div>
         
@@ -66,11 +80,14 @@
                 e.preventDefault();
                 const firstPin = document.querySelector("#firstPin").value;
                 const secondPin = document.querySelector("#secondPin").value;
-                const equation = document.querySelector("#equation").value;
+                const firstController = document.querySelector("#firstController").value;
+                const secondController = document.querySelector("#secondController").value;
+                
+                const amount = document.querySelector("#amount").value;
                 const ROW = 3;
                 const COL = 3;
                 let item = {
-                    type: 'voltageSourceControlled',
+                    type: 'vccs',
                     firstPin: {
                         row: Math.trunc(firstPin / COL),
                         col: Math.trunc(firstPin % COL),
@@ -80,7 +97,9 @@
                         col: Math.trunc(secondPin % COL)
                     },
                     attrs: {
-                        equation
+                        firstController,
+                        secondController,
+                        amount
                     }
                 };
                 ipcRenderer.send('element:add', item);

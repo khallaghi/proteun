@@ -84,15 +84,15 @@
                             </div>
                             
                             <div class="btn-group">
-                                    <button type="button" class="btn btn-light add-element-btn" id="currentSourceControlled">
-                                            <img src="../statics/images/currentSourceControlled.png" class="element-btn">
+                                    <button type="button" class="btn btn-light add-element-btn" id="vcvs">
+                                            <img src="../statics/images/vcvs.png" class="element-btn">
                                     </button>
                                 
                                 
                             
                             
-                                    <button type="button" class="btn btn-light add-element-btn" id="voltageSourceControlled">
-                                            <img src="../statics/images/voltageSourceControlled.png" class="element-btn">
+                                    <button type="button" class="btn btn-light add-element-btn" id="vccs">
+                                            <img src="../statics/images/vccs.png" class="element-btn">
                                     </button>
                                 </div>
                                 
@@ -191,7 +191,7 @@
                 let item = result.voltages[i];
                 console.log('ITEM');
                 console.log(item);
-                let data = item.label + ' = ' + item.value;
+                let data = item.label + ' = ' + item.value.toFixed(2);
                 writeOnCanvas(data, item.row, item.col);
             }
 
@@ -199,7 +199,7 @@
                 let item = result.currents[i];
                 let labelFirstPin = single_digit_cord(item.firstPin);
                 let labelSecondPin = single_digit_cord(item.secondPin);
-                let data = `I[${labelFirstPin},${labelSecondPin}]=${item.value}`;
+                let data = `I[${labelFirstPin},${labelSecondPin}]=${item.value.toFixed(2)}`;
                 let row = (item.firstPin.row + item.secondPin.row) / 2;
                 let col = (item.firstPin.col + item.secondPin.col) / 2;
                 writeOnCanvas(data, row ,col);
