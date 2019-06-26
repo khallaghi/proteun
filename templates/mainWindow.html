@@ -95,7 +95,18 @@
                                             <img src="../statics/images/vccs.png" class="element-btn">
                                     </button>
                                 </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-light add-element-btn" id="cccs">
+                                            <img src="../statics/images/cccs.png" class="element-btn">
+                                    </button>
                                 
+                                
+                            
+                            
+                                    <button type="button" class="btn btn-light add-element-btn" id="ccvs">
+                                            <img src="../statics/images/ccvs.png" class="element-btn">
+                                    </button>
+                                </div>
 
                                 <button type="button" class="btn btn-light add-element-btn" id="ground">
                                         <img src="../statics/images/ground.png" class="element-btn">
@@ -194,12 +205,14 @@
                 let data = item.label + ' = ' + item.value.toFixed(2);
                 writeOnCanvas(data, item.row, item.col);
             }
-
+            console.log('CURRENTS');
+            console.log(result.currents);
             for (let i in result.currents) {
                 let item = result.currents[i];
                 let labelFirstPin = single_digit_cord(item.firstPin);
                 let labelSecondPin = single_digit_cord(item.secondPin);
-                let data = `I[${labelFirstPin},${labelSecondPin}]=${item.value.toFixed(2)}`;
+                let value = parseFloat(item.value).toFixed(2);
+                let data = `I[${labelFirstPin},${labelSecondPin}]=${value}`;
                 let row = (item.firstPin.row + item.secondPin.row) / 2;
                 let col = (item.firstPin.col + item.secondPin.col) / 2;
                 writeOnCanvas(data, row ,col);
@@ -336,6 +349,7 @@
         }
             
         initCanvas();
+        // updateCanvas();
 
             
             // var imgInstance = new fabric.Image(imgElement, {

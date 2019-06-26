@@ -12,18 +12,18 @@
     
     </head>
     <body>
-            <div class="container">
+        <div class="container">
                     <div class="row">
-                            <div class="col-sm">
-        <h4 class="display-4" style="color: #7a7874">Add New Current Source Conrolled</h4>
-        </div>
+                        <div class="col-sm">
+        <h4 class="display-4" style="color: #7a7874">Add New Voltage Source Controlled</h4>
+    </div>
         </div>
 <form id="resistorForm">
     <div class="row">
 
         <div class="col-6 form-group">
-            <label for="resistorFirstPin">First Pin Location</label>
-            <input type="number" class="form-control" id="firstPin" placeholder="First Pin">
+            <label for="resistorFirstPin" >First Pin Location</label>
+            <input type="number" autofocus class="form-control" id="firstPin" placeholder="First Pin">
     
         </div>
         <div class="col-6 form-group">
@@ -31,27 +31,35 @@
             <input type="number" class="form-control" id="secondPin"  placeholder="Second Pin">
         
         </div>
+
     </div>
     <div class="row">
         <div class="col-4 form-group">
-            <label for="resistorAmount">First Pin</label>
-            <input type="number" class="form-control" id="firstControlled" aria-describedby="addon-wrapping" placeholder="First Pin">
-            
-        </div>
-        <div class="col-4 form-group">
-            <label for="resistorAmount">Second Pin</label>
-            <input type="number" class="form-control" id="secondControlled" aria-describedby="addon-wrapping" placeholder="Second Pin">
-            
-        </div>
-        <div class="col-4 form-group">
             <label for="resistorAmount">Amount</label>
+           
             <input type="number" class="form-control" id="amount" aria-describedby="addon-wrapping" placeholder="amount">
             
-        </div>
+        
         
         </div>
+
+        <div class="col-4 form-group">
+            <label for="resistorAmount">First Controller</label>
+           
+            <input type="number" class="form-control" id="firstController" aria-describedby="addon-wrapping" placeholder="First Controller">
+            
+        
+        
+        </div>
+
+        <div class="col-4    form-group">
+            <label for="resistorAmount">SecondController</label>
+           
+            <input type="number" class="form-control" id="secondController" aria-describedby="addon-wrapping" placeholder="Second Controller">
+        </div>
+
         <div class="col-md-6">
-            <img src="../../statics/images/helpers/vcvs.png" class="modal-helper-image">
+            <img src="../../statics/images/helpers/vccs.png" class="modal-helper-image">
         </div>
     </div>
         
@@ -72,13 +80,14 @@
                 e.preventDefault();
                 const firstPin = document.querySelector("#firstPin").value;
                 const secondPin = document.querySelector("#secondPin").value;
-                const firstControlled = document.querySelector('#fristControlled').value
-                const secondControlled = document.querySelector('#secondControlled').value
-                const amount = document.querySelector('#amount').value;
+                const firstController = document.querySelector("#firstController").value;
+                const secondController = document.querySelector("#secondController").value;
+                
+                const amount = document.querySelector("#amount").value;
                 const ROW = 3;
                 const COL = 3;
                 let item = {
-                    type: 'vcvs',
+                    type: 'cccs',
                     firstPin: {
                         row: Math.trunc(firstPin / COL),
                         col: Math.trunc(firstPin % COL),
@@ -88,8 +97,8 @@
                         col: Math.trunc(secondPin % COL)
                     },
                     attrs: {
-                        firstControlled,
-                        secondControlled,
+                        firstController,
+                        secondController,
                         amount
                     }
                 };

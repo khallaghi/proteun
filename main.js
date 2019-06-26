@@ -13,7 +13,7 @@ process.env.NODE_ENV = 'development';
 let mainWindow;
 let addResistorWindow;
 let elements = [];
-const filePath = path.join(__dirname,'sample_circuites', 'init-vccs.json');
+const filePath = path.join(__dirname,'sample_circuites', 'init-test.json');
 
 try {
   let data = fs.readFileSync(filePath, {encoding: 'utf-8'});
@@ -295,13 +295,37 @@ function group_items(nodeSet) {
 
 }
 
-function initial_mtx(len) {
-  
+function alter_mna_mtxs(mnaMainMtx, mnaRhsMtx) {
+  mnaRhsMtx.push(0);
+  for(let i in mnaMainMtx) {
+    mnaMainMtx[i].push(0);
+  }
+  mnaMainMtx.push(new Array(mnaMainMtx.length).fill(0));
+}
+
+function initial_mtx(len, nodeSetLen, voltageSources, cccses, ccvses) {
+  let mapIdx = {};
   let mnaMainMtx = (new Array(len)).fill().map(() => { return new Array(len).fill(0);});
   let mnaRhsMtx = new Array(len).fill(0);
+  
+  for (let i in voltageSources) {
+    let vlt = voltageSources[i];
+    mapIdx[`${vlt.firstSet}-${vlt.secondSet}`] = nodeSetLen + parseInt(i);
+  }
+
+  for (let i in cccses) {
+    let item = cccses[i];
+    if (!mapIdx.hasOwnProperty(`${item.firstController}-${item.secondController}`)) {
+      mapIdx[`${item.firstController}-${item.secondController}`] = mnaRhsMtx.length;
+      alter_mna_mtxs(mnaMainMtx, mnaRhsMtx);
+    }
+  }
+  
+
   return {
     mnaMainMtx,
-    mnaRhsMtx
+    mnaRhsMtx,
+    mapIdx
   };
 }
 
@@ -406,6 +430,108 @@ function handle_vccs(vccses, mnaMainMtx) {
   return mnaMainMtx;
 }
 
+function place_vcvs_src_mna_mtx(vcvs, mnaMainMtx, firstIdx, currIdx) {
+  if (vcvs.firstSet !== -1) {
+    mnaMainMtx[vcvs.firstSet][firstIdx+currIdx] -= 1;
+    mnaMainMtx[firstIdx+currIdx][vcvs.firstSet] -= 1;
+  }
+
+  if (vcvs.secondSet !== -1) {
+    mnaMainMtx[vcvs.secondSet][firstIdx+currIdx] += 1;
+    mnaMainMtx[firstIdx+currIdx][vcvs.secondSet] += 1;
+  }
+
+  if (vcvs.firstController !== -1) {
+    mnaMainMtx[firstIdx+currIdx][vcvs.firstController] += parseInt(vcvs.amount);
+  }
+
+  if (vcvs.secondController !== -1) {
+    mnaMainMtx[firstIdx+currIdx][vcvs.secondController] -= parseInt(vcvs.amount);
+  }
+
+  return mnaMainMtx;
+}
+
+function handle_vcvs(vcvses, mnaMainMtx, firstIdx) {
+  for (let i in vcvses) {
+    let vcvs = vcvses[i];
+    mnaMainMtx = place_vcvs_src_mna_mtx(vcvs, mnaMainMtx, parseInt(firstIdx), parseInt(i));
+  }
+  return mnaMainMtx;
+}
+   
+
+function place_cccs_src_mna_mtx(cccs, mnaMainMtx, cccsFirstIdx, currIdx, mapIdx) {
+  let dependentCurrIdx = -1;
+  if (mapIdx.hasOwnProperty(`${cccs.firstController}-${cccs.secondController}`)) {
+    dependentCurrIdx = mapIdx[`${cccs.firstController}-${cccs.secondController}`];
+  }
+  
+  if (cccs.secondSet !== -1) {
+    mnaMainMtx[cccs.secondSet][cccsFirstIdx + currIdx] += 1;
+  }
+  if (cccs.firstSet !== -1) {
+    mnaMainMtx[cccs.firstSet][cccsFirstIdx + currIdx] -= 1;
+  }
+  if (dependentCurrIdx !== -1) {
+    if (cccs.secondController !== -1) {
+      mnaMainMtx[cccs.secondController][dependentCurrIdx] += 1;
+      mnaMainMtx[dependentCurrIdx][cccs.secondController] += 1;
+    }
+    if (cccs.firstController !== -1 && dependentCurrIdx) {
+      mnaMainMtx[cccs.firstController][dependentCurrIdx] -= 1;
+      mnaMainMtx[dependentCurrIdx][cccs.firstController] -= 1;
+    }
+    mnaMainMtx[cccsFirstIdx + currIdx][dependentCurrIdx] -= cccs.amount;
+  }
+  mnaMainMtx[cccsFirstIdx + currIdx][cccsFirstIdx + currIdx] += 1;
+  
+  return mnaMainMtx;
+}
+
+function handle_cccs(cccses, mnaMainMtx, cccsFirstIdx, mapIdx) {
+  for (let i in cccses) {
+    let cccs = cccses[i];
+    mnaMainMtx = place_cccs_src_mna_mtx(cccs, mnaMainMtx, cccsFirstIdx, currIdx, mapIdx);
+  }
+  return mnaMainMtx;
+}
+
+function place_ccvs_src_mna_mtx(ccvs, mnaMainMtx, ccvsFirstIdx, mapIdx) {
+  let dependentCurrIdx = -1;
+  if (mapIdx.hasOwnProperty(`${cccs.firstController}-${cccs.secondController}`)) {
+    dependentCurrIdx = mapIdx[`${cccs.firstController}-${cccs.secondController}`];
+  }
+  if (cccs.secondSet !== -1) {
+    mnaMainMtx[cccs.secondSet][ccvsFirstIdx + currIdx] += 1;
+    mnaMainMtx[ccvsFirstIdx + currIdx][cccs.secondSet] += 1;
+  }
+  if (cccs.firstSet !== -1) {
+    mnaMainMtx[cccs.firstSet][ccvsFirstIdx + currIdx] -= 1;
+    mnaMainMtx[ccvsFirstIdx + currIdx][cccs.firstSet] -= 1;
+  }
+  if (dependentCurrIdx !== -1) {
+    if (cccs.secondController !== -1) {
+      mnaMainMtx[cccs.secondController][dependentCurrIdx] += 1;
+      mnaMainMtx[dependentCurrIdx][cccs.secondController] += 1;
+    }
+    if (cccs.firstController !== -1 && dependentCurrIdx) {
+      mnaMainMtx[cccs.firstController][dependentCurrIdx] -= 1;
+      mnaMainMtx[dependentCurrIdx][cccs.firstController] -= 1;
+    }
+    mnaMainMtx[ccvsFirstIdx + currIdx][dependentCurrIdx] -= ccvs.amount;
+  }
+  return mnaMainMtx;
+}
+
+function handle_ccvs(ccvses, mnaMainMtx, ccvsFirstIdx, mapIdx) {
+  for (let i in ccvses) {
+    let ccvs = ccvses[i];
+    mnaMainMtx = place_ccvs_src_mna_mtx(ccvs, mnaMainMtx, ccvsFirstIdx, mapIdx);
+  }
+  return mnaMainMtx;
+}
+
 function solveMtx(mnaMainMtx, mnaRhsMtx) {
   return math.lusolve(mnaMainMtx, mnaRhsMtx);
 }
@@ -442,7 +568,7 @@ function find_voltage_src_idx(element, voltageSources, nodeSet) {
   return -1;
 }
 
-function calculate_currents(nodeSet, voltageSources, result) {
+function calculate_currents(nodeSet, voltageSources,vcvses, cccses, ccvses , result) {
   let currents = [];
   for (let i in elements) {
     let element = elements[i];
@@ -474,7 +600,37 @@ function calculate_currents(nodeSet, voltageSources, result) {
         label: 'A'
       };
       currents.push(item);
-    }
+    } else if(element.type === 'vcvs') {
+      let idx = find_voltage_src_idx(element, vcvses, nodeSet);
+      let current = result[nodeSet.length + voltageSources.length + idx][0];
+      let item = {
+        firstPin: element.firstPin,
+        secondPin: element.secondPin,
+        value: current,
+        label: 'A'
+      };
+      currents.push(item);
+    } else if(element.type === 'cccs') {
+      let idx = find_voltage_src_idx(element, cccses, nodeSet);
+      let current = result[nodeSet.length + voltageSources.length + vcvses.length + idx][0];
+      let item = {
+        firstPin: element.firstPin,
+        secondPin: element.secondPin,
+        value: current,
+        label: 'A'
+      };
+      currents.push(item);
+    } else if(element.type === 'ccvs') {
+      let idx = find_voltage_src_idx(element, ccvses, nodeSet);
+      let current = result[nodeSet.length + voltageSources.length +vcvses.length + cccses.length + idx][0];
+      let item = {
+        firstPin: element.firstPin,
+        secondPin: element.secondPin,
+        value: current,
+        label: 'A'
+      };
+      currents.push(item);
+    } 
   }
   return currents;
 }
@@ -495,15 +651,26 @@ function analyze(){
     vcvses, 
     ccvses
   } = group_items(nodeSet);
-  const len = nodeSet.length + voltageSource.length + vcvses.length;
-  let {mnaMainMtx, mnaRhsMtx} = initial_mtx(len);
+  const len = nodeSet.length + voltageSources.length + 
+      vcvses.length + cccses.length + ccvses.length;
+  let {mnaMainMtx, mnaRhsMtx, mapIdx} = initial_mtx(len, nodeSet.length, voltageSources, cccses, ccvses);
 
   mnaMainMtx = handle_resistors(resistors, mnaMainMtx);
   mnaRhsMtx = handle_current_sources(currentSources, mnaRhsMtx);
   let tmpResult = handle_voltage_sources(voltageSources, mnaMainMtx, mnaRhsMtx, resistors.length);
   mnaMainMtx = tmpResult.mnaMainMtx;
   mnaRhsMtx = tmpResult.mnaRhsMtx;
+
   mnaMainMtx = handle_vccs(vccses, mnaMainMtx);
+
+  let vcvsFirstIdx = nodeSet.length + voltageSources.length;
+  let cccsFirstIdx = vcvsFirstIdx + vcvses.length;
+  let ccvsFirstIdx = cccsFirstIdx + cccses.length;
+
+  mnaMainMtx = handle_vcvs(vcvses, mnaMainMtx, vcvsFirstIdx);
+  
+  mnaMainMtx = handle_cccs(cccses, mnaMainMtx, cccsFirstIdx, mapIdx);
+  mnaMainMtx = handle_ccvs(ccvses, mnaMainMtx, ccvsFirstIdx, mapIdx);
 
   console.log('FILLED MAIN MTX');
   console.log(mnaMainMtx);
@@ -514,7 +681,7 @@ function analyze(){
 
   console.log('RESULTS');
   console.log(result);
-  let currents = calculate_currents(nodeSet, voltageSources, result);
+  let currents = calculate_currents(nodeSet, voltageSources, vcvses, cccses, ccvses, result);
   console.log('CURRENTS');
   console.log(currents);
   let voltages = [];
