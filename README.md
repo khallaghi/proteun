@@ -20,4 +20,4 @@ npm start
 enjoy :)
 
 ## License
-MIT
+[MIT](LICENSE)
