@@ -12,6 +12,6 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "electron": "^5.0.2",
-    "mathjs": "^6.0.2"
+    "mathjs": "^7.5.1"
   }
 }
